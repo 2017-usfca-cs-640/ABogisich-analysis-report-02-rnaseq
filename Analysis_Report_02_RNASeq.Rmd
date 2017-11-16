@@ -1,7 +1,7 @@
 ---
-title: "Analysis Report 2: Your Title Here"
-author: "Don Francisco"
-date: "November 10, 2017"
+title: "Analysis Report 2: Influences of Non-small Cell Lung Cancer on Lipid Metabolism"
+author: "Allison Bogisich"
+date: "November 15, 2017"
 output: github_document
 bibliography: references.bib
 csl: bioinformatics.csl
@@ -122,6 +122,22 @@ final_table %>%
 ```
 
 **Figure 2**: Here we show another example figure caption.
+
+```{r make-subset-SNOR-family-genes}
+#here I wantto pull out just the genes that either have SNORA- or SNORD- in their base name 
+#have to filter it out as a subset from final_table
+snor_genes <- final_table %>%
+  filter(grepl("SNOR"))
+  group_by(genename) %>%
+  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
+  arrange(desc(mean_count)) %>%
+  head(n = 15)
+
+# then we can use the `kable()` function to make a nicely formatted
+# markdown table
+snor_genes %>%
+  kable()
+```
 
 # Discussion
 
