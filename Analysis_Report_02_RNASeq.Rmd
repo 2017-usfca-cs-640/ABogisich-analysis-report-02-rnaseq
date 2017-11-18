@@ -13,6 +13,24 @@ csl: bioinformatics.csl
 
 Add about 1 page here. Must cite at least 5 peer reviewed articles.
 
+One of the most longstanding symptoms of cancer has been increased rates of lipid synthesis, as
+cancer cells are prone to exhibit specific alterations in their metabolic activities. Cancer is
+predicted to kill approximately 595,690 Americans in 2016, equating to about 1,630 people per
+day according to the American Cancer Society. Cancer-associated metabolic reprogramming
+occurs in order to support the increased production of cells via necessary increased rates of
+biosynthesis of proteins, nucleic acids, and aforementioned lipids [@baenke2013hooked]. However,
+not until relatively recently has research delving into the metabolic processes involved in lipid
+biosynthesis and their regulation- within the context of human disease- sustained much traction.
+The unique connection between lipid metabolism and cancer in humans lies within its linkage to
+epidermal growth factor (EGF) proteins and their receptors [@normanno2006epidermal]. Non-small
+cell lung cancer for example, is EGF specific and characterized by dramatic changes specifically
+in phospholipid profiles [@marien2015non].There are many human lipid metabolism disorders
+associated with aberrant lipid homeostasis besides cancers, including but not limited to:
+Gaucher’s disease, Faber’s disease, Wolman’s disease and many others [@saltiel2001insulin, @madhusudan2004multicenter,@chanarin1975neutral]. While these diseases are fairly rare, there are
+few current options for treatment and the survival rates-with decent quality of life-are quite low.
+
+SNORAs and SNORDs are small noncoding RNAs involved in RNA processing and nogalamycin biosynthesis. This biosynthesis of noglamycin is critical to antirumor and antibiotic functionality of cellular maintenance. Both types have been found to be dysregulated in various types of cancer and have been implicated in not only the development but also the progressions of human cancer malignancy. Thus, I hypothesize that the expression of SNOR genes in the patient tissues examined by Li and Seo et al. will show a markeded flux in their levels of expression. That in the patients will later stage cancers, there will be more expression relative to the earlier stage cancer patients. I also predict that the smoking patients will have a higher degree of abberant expression than that of the non-smokers.
+
 # Methods
 
 ## Sample origin and sequencing
@@ -123,8 +141,8 @@ final_table %>%
 
 **Figure 2**: Here we show another example figure caption.
 
-```{r make-subset-SNOR-family-genes}
-#here I wantto pull out just the genes that either have SNORA- or SNORD- in their base name 
+```{r make-subset-SNOR-top15-genes}
+#here I want to pull out just the top 15 genes that either have SNORA- or SNORD- in their base name 
 #have to filter it out as a subset from final_table
 snor_genes <- final_table %>%
   filter(grepl("SNOR", genename)) %>%
@@ -136,6 +154,24 @@ snor_genes <- final_table %>%
 # then we can use the `kable()` function to make a nicely formatted
 # markdown table
 snor_genes %>%
+  kable()
+```
+
+
+
+```{r make-subset-SNOR-top50-genes}
+#here I wantto pull out just the top 15 genes that either have SNORA- or SNORD- in their base name 
+#have to filter it out as a subset from final_table
+snor_genes_50 <- final_table %>%
+  filter(grepl("SNOR", genename)) %>%
+  group_by(genename) %>%
+  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
+  arrange(desc(mean_count)) %>%
+  head(50)
+
+# then we can use the `kable()` function to make a nicely formatted
+# markdown table
+snor_genes_50 %>%
   kable()
 ```
 
