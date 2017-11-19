@@ -183,7 +183,22 @@ total_snor %>%
   kable()
 ```
  
+```{r make-summary-SNOR-table, echo = FALSE}
+# There are many many genes in this dataset, so we can
+# subset it down to just a few here to look for interesting patterns
+# in the most highly expressed
+all_snor <- final_table %>%
+  filter(grepl("SNOR", genename)) %>%
+  group_by(gender, genename, smoking_status, cancer_stage) %>%
+  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
+  arrange(desc(mean_count)) %>%
+  head(n = 50)
 
+# then we can use the `kable()` function to make a nicely formatted
+# markdown table
+all_snor %>%
+  kable()
+```
 
 # Discussion
 
