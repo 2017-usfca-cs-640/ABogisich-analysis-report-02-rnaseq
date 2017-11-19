@@ -154,34 +154,6 @@ snor_genes %>%
   kable()
 ```
 
-
-
-```{r make-subset-SNOR-top50-genes}
-#here I wantto pull out just the top 15 genes that either have SNORA- or SNORD- in their base name 
-#have to filter it out as a subset from final_table
-snor_genes_50 <- final_table %>%
-  filter(grepl("SNOR", genename)) %>%
-  group_by(genename) %>%
-  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
-  arrange(desc(mean_count)) %>%
-  head(50)
-
-# then we can use the `kable()` function to make a nicely formatted
-# markdown table
-snor_genes_50 %>%
-  kable()
-```
-```{r make-subset-SNOR-genes-all}
-#here I wantto pull out all genes that have SNORA- or SNORD- in their base name 
-#have to filter it out as a subset from final_table
-total_snor <- final_table %>%
-  filter(grepl("SNOR", genename)) %>%
-  group_by(genename) %>%
-  
-#then if I try to make a table of it using 'kable'...
-total_snor %>%
-  kable()
-```
  
 ```{r make-summary-SNOR-table, echo = FALSE}
 # There are many many genes in this dataset, so we can
@@ -192,14 +164,25 @@ all_snor <- final_table %>%
   group_by(gender, genename, smoking_status, cancer_stage) %>%
   summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
   arrange(desc(mean_count)) %>%
-  head(n = 50)
+  head(n = 15)
 
 # then we can use the `kable()` function to make a nicely formatted
 # markdown table
 all_snor %>%
   kable()
 ```
-
+**Figure 1**:
+```{r make-barplot-of-highly-expressed-genes, echo = FALSE}
+# this code uses the same data as above, but use it to make a
+# barplot - remember geom_col() is just like
+# when one would use geom_bar(stat = "identity")
+all_snor %>%
+  ggplot(aes(x = genename,
+             y = mean_count,
+             fill = gender)) +
+    geom_col(position = "dodge")
+```
+**Figure 2**:
 # Discussion
 
 Add around 1-2 pages interpreting your results and considering future directions one might take in analyzing these data.
