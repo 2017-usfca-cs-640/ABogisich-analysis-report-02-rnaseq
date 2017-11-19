@@ -11,8 +11,6 @@ csl: bioinformatics.csl
 
 # Introduction
 
-Add about 1 page here. Must cite at least 5 peer reviewed articles.
-
 One of the most longstanding symptoms of cancer has been increased rates of lipid synthesis, as
 cancer cells are prone to exhibit specific alterations in their metabolic activities. Cancer is
 predicted to kill approximately 595,690 Americans in 2016, equating to about 1,630 people per
@@ -24,18 +22,16 @@ biosynthesis and their regulation- within the context of human disease- sustaine
 The unique connection between lipid metabolism and cancer in humans lies within its linkage to
 epidermal growth factor (EGF) proteins and their receptors [@normanno2006epidermal]. Non-small
 cell lung cancer for example, is EGF specific and characterized by dramatic changes specifically
-in phospholipid profiles [@marien2015non].There are many human lipid metabolism disorders
-associated with aberrant lipid homeostasis besides cancers, including but not limited to:
-Gaucher’s disease, Faber’s disease, Wolman’s disease and many others [@saltiel2001insulin, @madhusudan2004multicenter,@chanarin1975neutral]. While these diseases are fairly rare, there are
-few current options for treatment and the survival rates-with decent quality of life-are quite low.
+in phospholipid profiles [@marien2015non]. In 2017, non-small cell lung cancer is the most prevalent type of lung cancer, accounting for about 85 % of all lung cancer cases in the USA according to the American Cancer Society.There are many human lipid metabolism disorders associated with aberrant lipid homeostasis besides cancers, including but not limited to:Gaucher’s disease, Faber’s disease, Wolman’s disease and many others [@saltiel2001insulin, @madhusudan2004multicenter,@chanarin1975neutral]. While these diseases are fairly rare, there are few current options for treatment and the survival rates-with decent quality of life-are quite low.
 
-SNORAs and SNORDs are small noncoding RNAs involved in RNA processing and nogalamycin biosynthesis. This biosynthesis of noglamycin is critical to antirumor and antibiotic functionality of cellular maintenance. Both types have been found to be dysregulated in various types of cancer and have been implicated in not only the development but also the progressions of human cancer malignancy. Thus, I hypothesize that the expression of SNOR genes in the patient tissues examined by Li and Seo et al. will show a markeded flux in their levels of expression. That in the patients will later stage cancers, there will be more expression relative to the earlier stage cancer patients. I also predict that the smoking patients will have a higher degree of abberant expression than that of the non-smokers.
+
+SNORAs and SNORDs are small noncoding RNAs involved in RNA processing and nogalamycin biosynthesis. This biosynthesis of noglamycin is critical to antitumor and antibiotic functionality of cellular maintenance. Both types have been found to be dysregulated in various types of cancer and have been implicated in not only the development but also the progressions of human cancer malignancy. This additional analysis will be based on data derivied from the previous work of Li and Seo et al. in non-small cell cancer patients. I hypothesize that the expression of SNOR genes in the patient tissues examined by Li and Seo et al. will show a markeded flux in their levels of expression. That in the patients will later stage cancers, there will be more expression relative to the earlier stage cancer patients. I also predict that the smoking patients will have a higher degree of abberant expression than that of the non-smokers, due to the additional carcinogens found in tobacco products [@freour2008active].
 
 # Methods
 
 ## Sample origin and sequencing
 
-Add about half a page here. In this section instead of first person (I/we), use Li et al. [@li2015rna] and Seo et al. [@seo2012transcriptional], since you'll just be describing what they did, based on the methods in their paper(s). It's important to include this so the reader knows what the study design was for the data you will be presenting.
+The work of Li and her team [@li2015rna] included data from the first large scale RNA sequencing study of lung adenocarcinoma by Seo et al. [@seo2012transcriptional]. Paired surgical samples of both cancerous lung tissue and non-cancerous tissue were taken from 200 Korean patients. Only eighty-seven samples were then sequenced using RNA-seq and the Illumina TruSeq SBS Kit v3 on a HiSeq 2000 sequencer (Illumina Inc.) to obtain 100-bp paired-end reads. Of the 87 individuals whose cancer specimens were screened and sequenced, smoking history prior to diagnosis of lung cancer was provided by only 83 (47 smokers, 36 never-smokers, and four of unknown history).They were then aligned and read based on the NCBI human reference genome assembly build (build 37.1). Li et al. then downloaded Seo et al.'s RNA sequencing and phenotypic metadata for 68 patients(with 34 validated smoking and 34 non-smoking histories) from Gene Expression Omnibus (GEO) with accession number GSE40419. Comparisons were conducted based on phenotypes, including age at diagnosis,gender, and smoking history which are available from the public website (http://genome.cshlp.org/content/22/11/2109/suppl/DC1). Additionally, in order to validate genes identified in the nonsmoker group, independent RNA-seq data from six non-smoker patients were also downloaded from another GEO with accessionnumber GSE37765 [@kim2013high]. Differential gene expression analysis was then conducted between paired normal and tumor tissue using R Bioconductor and edgeR. Genotype calling was done for single-nucleotide variants, from RNA-seq bam files, with pair-end RNA-seq reads aligned to humangenome assembly Ensembl GRCh37 by Tophat.
 
 ## Computational
 
