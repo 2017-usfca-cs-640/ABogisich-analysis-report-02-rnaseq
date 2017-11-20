@@ -36,9 +36,6 @@ The work of Li and her team [@li2015rna] included data from the first large scal
 In order to analyze the data from Li et al., a series of both R and bash scripts were run. In the first script, the NCBI data set downloaded (using 'aspera' and 'sra-toolkit' for added effiency) can be found here:http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz. The second script facilitated the downloading of the *Homo sapien* genome via the 'Biomartr' pacakge (Drost and Paszkowski,2017). Output was then piped into 'Ref-seq'so that we could quickly aquire all the reference genome (RNA and annotations). Subsequently, the third script contains the export path and simple for-loop that converted .sra to .fastq format and put it into our output directory. Next in the pipe was converting sequences to k-mers and building an index to map against the original reference DNA for use with 'Sailfish'[@patro2014sailfish]. Then a large amount of time was alloted for running fastqc on all fastq files and saving output to output dirrectory, using 86 threads. Once complete, the large data set was trimmed to one of a more manageable size using 'trimmomatic' on paired-end DNA sequences in order to get rid of Illumina tags, gummy ends, suspicious quality sequences [@bolger2014trimmomatic]. Code checks were run to ensure completion of trimming step prior to running of 'Sailfish', which trimmed out base names while reading and running prior to output. All aforementioned steps were completed in TMUX, and all subsequently described steps were done in R 3.4.2 and R stuio using version 1.1.383. The final script consolidated counts by matching transcript identifiers to the gene name and pooling them all together at the gene level prior to counting the number of reads that have mapped to the gene. The output table was then metled with the metadata table to create our final_table for use in exploratory data analysis using 'tidyr', in order to create more data parsing friendly long-form data . The 'ggplot2' package could then be used for visualization of data into graphic results.
 
 
-
-
-
 # Results
 
 In addition to a minimum of 4-5 figures/tables (and associated captions), you should include sufficient text in this section to describe what your findings were. Remember that in the results section you just describe what you found, but you don't interpret it - that happens in the discussion.
@@ -76,73 +73,12 @@ names(final_table) %<>% tolower
 stopifnot(exists("final_table"))
 ```
 
-```{r make-summary-table, echo = FALSE}
-# There are many many genes in this dataset, so we can
-# subset it down to just a few here to look for interesting patterns
-# in the most highly expressed
-top_15 <- final_table %>%
-  group_by(gender, genename) %>%
-  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
-  arrange(desc(mean_count)) %>%
-  head(n = 15)
 
-# then we can use the `kable()` function to make a nicely formatted
-# markdown table
-top_15 %>%
-  kable()
-```
-
-**Table 1**: The most highly expressed genes in both genders included *SFTPB* and *EEF1A1*.
-
-```{r make-barplot-of-highly-expressed-genes, echo = FALSE}
-# this code uses the same data as above, but use it to make a
-# barplot - remember geom_col() is just like
-# when you use geom_bar(stat = "identity")
-top_15 %>%
-  ggplot(aes(x = genename,
-             y = mean_count,
-             fill = gender)) +
-    geom_col(position = "dodge")
-```
-
-**Figure 1**: Here we show an example figure caption.
-
-```{r make-boxplot-of-highly-expressed-genes, echo = FALSE}
-# here we just want to pull out the unique gene names and turn
-# them into a vector so we can use it below to make a boxplot
-# we use the pull() funtion to get this as a vector, just like
-# we did when making histograms several weeks ago
-top_genes <- top_15 %>%
-  ungroup() %>%
-  select(genename) %>%
-  unique() %>%
-  pull()
-
-# now we need to filter from the full data set again, because
-# we don't just want summary data, we want all the data in
-# order to make boxplots
-final_table %>%
-  filter(genename %in% top_genes) %>%
-  ggplot(aes(x = genename,
-             y = counts_lengthscaledtpm,
-             fill = gender)) +
-    geom_boxplot() +
-    facet_wrap(~cancer_stage) +
-    xlab("Gene Name") +
-    ylab("Scaled read counts per gene") +
-    ggtitle("Read counts per gene by gender and cancer stage") +
-    theme_bw() + # simplifies theme
-    theme(axis.text.x = # rotates x axis labels vertically
-            element_text(angle = 90,
-                         hjust = 1))
-```
-
-**Figure 2**: Here we show another example figure caption.
 
 ```{r make-summary-table-SNOR-top15-genes}
-#here I want to pull out just the top 15 genes that either 
-#have SNORA- or SNORD- in their base name 
-#have to filter it out as a subset from final_table
+# here I want to pull out just the top 15 genes that either 
+#  SNORA- or SNORD- in their base name 
+# have to filter it out as a subset from final_table
 snor_genes <- final_table %>%
   filter(grepl("SNOR", genename)) %>%
   group_by(genename) %>%
@@ -155,38 +91,40 @@ snor_genes <- final_table %>%
 snor_genes %>%
   kable()
 ```
+**Table 1**: The most highly expressed SNOR-family genes across all patients of both genders.
+
+Out of a total of 297 SNOR-family genes identified in patient lung tissue samples, the breakdown between the fifteen most represented by average sequence count was not quite even. There were nine SNORD- genes to only six SNORA-genes. Total counts per type of SNORA- and SNORD-genes were 129 and 168 respectively.
 
  
-```{r make-summary-SNOR-table, echo = FALSE}
+```{r make-all-SNOR-table, echo = FALSE}
 # There are many many genes in this dataset, so we can
-# subset it down to just a few here to look for interesting patterns
-# in the most highly expressed
+# subset it down to just a few here to look for 
+# patterns in the most highly expressed
 all_snor <- final_table %>%
   filter(grepl("SNOR", genename)) %>%
   group_by(gender, genename, smoking_status, cancer_stage) %>%
   summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
   arrange(desc(mean_count)) %>%
   head(n = 15)
+# limiting to 15 just so that the results can be
+# more easily visualized
 
-# then we can use the `kable()` function to make a nicely formatted
-# markdown table
-all_snor %>%
-  kable()
 ```
-**Figure 1**:
 
 
-```{r make-barplot-of-highly-expressed-genes, echo = FALSE}
+
+```{r barplot-of-highly-expressed-genes-gender, echo = FALSE}
 # this code uses the same data as above, but use it to make a
-# barplot - remember geom_col() is just like
-# when one would use geom_bar(stat = "identity")
+# barplot by gender of patients
 all_snor %>%
   ggplot(aes(x = genename,
              y = mean_count,
              fill = gender)) +
     geom_col(position = "dodge")
 ```
-**Figure 2**:
+**Figure 1**: Highest expressed SNOR-genes by gender representation.
+
+When the SNOR-genes with the greatest mean count within the experimental group are categorized by gender, there is a strong divide along the gender line. Based on the nine highest expressed SNOR-genes visualized in Fig.1, only one of them had the highest rate of expression in females. The other eight had higher expression in males, and were exclusively being expressed in males for seven. The SNORD78 gene had the hightest mean count at an almost thousand count average.
 
 ```{r make-barplot-of-SNOR-smoking-status, echo = FALSE}
 # this code uses the same data as above, but use it to make a
@@ -198,7 +136,9 @@ all_snor %>%
              fill = smoking_status)) +
     geom_col(position = "dodge")
 ```
+**Figure 2**: Highest expressed SNOR-genes by smoking status of patients.
 
+The homogeneity seen when grouping the most expressed SNOR-genes by gender is much stronger than when expression levels are categorized by smoking status of the patients. Patients that were currently smoking at the time of the study had five SNOR-genes being highly expressed relative to other groups of other status, with the highest mean counts of all genes. Previous smokers had equivalent rates of overexpressing SNOR-genes, with five genes being overexpressed within the group, and the third highest mean count across all statuses. Patients whom had reportedly never smoked or had no history collected were only represented in two of the SNOR-genes with the highest mean counts. The gene SNORD44 had most variety for representation by smoking status, with current, previous, and non-smokers all having high expression rates.
 
 ```{r make-barplot-of-SNOR-smoking-status, echo = FALSE}
 # this code uses the same data as above, but use it to make a
@@ -210,28 +150,14 @@ all_snor %>%
              fill = cancer_stage)) +
     geom_col(position = "dodge")
 ```
+**Figure 3**: Highest expressed SNOR-genes by cancer stage of patients.
 
-
-
-
-
-
-
-
-All of the code below is what Prof. Zimmerman recommended
-```{r table-all-SNOR-genes}
-#code to pull just SNOR genes into usable object
-test_snor <- final_table %>%
-  filter(grepl("SNOR", genename)) %>%
-  group_by(genename) %>%
-  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
-  arrange(desc(mean_count)) %>%
-  kable()
-```
+When the stage of cancer at the time of tissue sampling is considered, the trends run almost parallel to when the genes were grouped by smoking status. However, the genes which were most expressed by current smokers were largely only at early stages of lung cancer (1A, 1B or 2B). The patients at the latter cancer stages (3A-4), did not exhibit the highest mean counts across genes. They did appear in six of the nine genes though, making of the majority of overexpressed SNOR-genes. Again, the SNORD44 gene showed great variablity in cancer stage as it did when grouped by smoking status. It had one of the highest mean counts for four stages of cancer, while SNORD78 followed closely with three stages  represented.
 
 
 ```{r sort-out-all-snor-genes}
-#take out just snor family genes from the final table
+# take out just snor family genes from final table
+# for count of total snor-genes represented
 final_snor <- final_table %>%
   filter(grepl("SNOR", genename)) %>%
   group_by(genename) %>%
@@ -244,7 +170,8 @@ final_snor <- final_table %>%
 ```
 
 ```{r sort-out-SNORA-genes}
-#this will pull out just the SNORA- specific genes
+# this will pull out just SNORA-genes
+# for total count represented in patients
 snora_genes <- final_table %>%
   filter(grepl("SNORA", genename)) %>%
   group_by(genename) %>%
@@ -257,7 +184,8 @@ snora_genes <- final_table %>%
 ```
 
 ```{r sort-out-SNORD-genes}
-#this will pull out just the SNORD- genes from final table
+# this will pull out just SNORD-genes
+# for total count represented in patients
 snord_genes <- final_table %>%
   filter(grepl("SNORD", genename)) %>%
   group_by(genename) %>%
@@ -271,5 +199,13 @@ snord_genes <- final_table %>%
 # Discussion
 
 Add around 1-2 pages interpreting your results and considering future directions one might take in analyzing these data.
+
+
+"gene amplification and the consequent overexpression of the amplified oncogene play an important role in the development of tumors, because their overexpression confers a growth advantage. The ability to identify putative oncogenes that are activated during tumorigenesis could facilitate the choice of molecular genetic targets for diagnosis and therapy of the disease." (Li et al., 2006)
+"Non-coding RNAs (ncRNAs) are important regulatory molecules involving in various physiological cellular processes. Alterations of ncRNAs, particularly microRNAs, play crucial roles in tumorigenesis. Accumulating evidence indicates that small nucleolar RNAs (snoRNAs), another large class of ncRNAs, are gaining prominence and more actively involved in carcinogenesis than previously thought. Some snoRNAs exhibit differential expression patterns in a variety of human cancers and demonstrate capability to affect cell transformation, tumorigenesis, and metastasis."
+"Given their vital role in diverse cellular processes, defining differential expression patterns of cancer type-specific snoRNAs should exploit for the development of novel cancer biomarkers. Indeed, we and others have demonstrated that snoRNAs are present in a stable form and consistently measurable in blood plasma, sputum, and urine samples [206-210]. Therefore, snoRNAs possess the potential as fluid-based biomarkers for cancers."
+snoRD33	Increased		NSCLC	[58]
+snoRD66	Increased		NSCLC
+[@mannoor2012small]
 
 # Sources Cited
