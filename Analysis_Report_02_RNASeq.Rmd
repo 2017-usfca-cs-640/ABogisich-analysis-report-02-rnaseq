@@ -11,9 +11,7 @@ csl: bioinformatics.csl
 
 # Introduction
 
-One of the most longstanding symptoms of cancer has been increased rates of lipid synthesis, as
-cancer cells are prone to exhibit specific alterations in their metabolic activities. Cancer is
-predicted to kill approximately 595,690 Americans in 2016, equating to about 1,630 people per
+One of the most longstanding symptoms of cancer has been increased rates of cellular structure synthesis, as cancer cells are prone to exhibit specific alterations in their metabolic activities. Cancer is predicted to kill approximately 595,690 Americans in 2016, equating to about 1,630 people per
 day according to the American Cancer Society. Cancer-associated metabolic reprogramming
 occurs in order to support the increased production of cells via necessary increased rates of
 biosynthesis of proteins, nucleic acids, and aforementioned lipids [@baenke2013hooked]. However,
@@ -36,6 +34,8 @@ The work of Li and her team [@li2015rna] included data from the first large scal
 ## Computational
 
 These are the methods that were used to process the sequencing data. Should probably be at least a half of a page. At a very minimum should include citations for biomartr, trimmomatic, and sailfish. Note that these three methods references don't count towards the five references you need to cite in the introduction.
+
+
 
 # Results
 
@@ -172,6 +172,8 @@ all_snor %>%
   kable()
 ```
 **Figure 1**:
+
+
 ```{r make-barplot-of-highly-expressed-genes, echo = FALSE}
 # this code uses the same data as above, but use it to make a
 # barplot - remember geom_col() is just like
@@ -183,6 +185,87 @@ all_snor %>%
     geom_col(position = "dodge")
 ```
 **Figure 2**:
+
+```{r make-barplot-of-SNOR-smoking-status, echo = FALSE}
+# this code uses the same data as above, but use it to make a
+# barplot - remember geom_col() is just like
+# when one would use geom_bar(stat = "identity")
+all_snor %>%
+  ggplot(aes(x = genename,
+             y = mean_count,
+             fill = smoking_status)) +
+    geom_col(position = "dodge")
+```
+
+
+```{r make-barplot-of-SNOR-smoking-status, echo = FALSE}
+# this code uses the same data as above, but use it to make a
+# barplot - remember geom_col() is just like
+# when one would use geom_bar(stat = "identity")
+all_snor %>%
+  ggplot(aes(x = genename,
+             y = mean_count,
+             fill = cancer_stage)) +
+    geom_col(position = "dodge")
+```
+
+
+
+
+
+
+
+
+All of the code below is what Prof. Zimmerman recommended
+```{r table-all-SNOR-genes}
+#code to pull just SNOR genes into usable object
+test_snor <- final_table %>%
+  filter(grepl("SNOR", genename)) %>%
+  group_by(genename) %>%
+  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
+  arrange(desc(mean_count)) %>%
+  kable()
+```
+
+
+```{r sort-out-all-snor-genes}
+#take out just snor family genes from the final table
+final_snor <- final_table %>%
+  filter(grepl("SNOR", genename)) %>%
+  group_by(genename) %>%
+  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
+  arrange(desc(mean_count)) %>%
+  ungroup() %>%
+  select(genename) %>%
+  unique() %>%
+  pull()
+```
+
+```{r sort-out-SNORA-genes}
+#this will pull out just the SNORA- specific genes
+snora_genes <- final_table %>%
+  filter(grepl("SNORA", genename)) %>%
+  group_by(genename) %>%
+  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
+  arrange(desc(mean_count)) %>%
+  ungroup() %>%
+  select(genename) %>%
+  unique() %>%
+  pull()
+```
+
+```{r sort-out-SNORD-genes}
+#this will pull out just the SNORD- genes from final table
+snord_genes <- final_table %>%
+  filter(grepl("SNORD", genename)) %>%
+  group_by(genename) %>%
+  summarize(mean_count = mean(counts_lengthscaledtpm)) %>%
+  arrange(desc(mean_count)) %>%
+  ungroup() %>%
+  select(genename) %>%
+  unique() %>%
+  pull()
+```
 # Discussion
 
 Add around 1-2 pages interpreting your results and considering future directions one might take in analyzing these data.
