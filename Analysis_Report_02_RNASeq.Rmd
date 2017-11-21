@@ -1,5 +1,5 @@
 ---
-title: "Analysis Report 2: Influences of Non-small Cell Lung Cancer on Lipid Metabolism"
+title: "Analysis Report 2: Implications of SNOR-family Genes in Non-small Cell Lung Cancer"
 author: "Allison Bogisich"
 date: "November 15, 2017"
 output: github_document
@@ -124,10 +124,9 @@ all_snor %>%
 
 When the SNOR-genes with the greatest mean count within the experimental group are categorized by gender, there is a strong divide along the gender line. Based on the nine highest expressed SNOR-genes visualized in Fig.1, only one of them had the highest rate of expression in females. The other eight had higher expression in males, and were exclusively being expressed in males for seven. The SNORD78 gene had the highest mean count at an almost thousand count average.
 
-```{r make-barplot-of-SNOR-smoking-status, echo = FALSE}
+```{r barplot-of-SNOR-smoking-status, echo = FALSE}
 # this code uses the same data as above, but use it to make a
-# barplot - remember geom_col() is just like
-# when one would use geom_bar(stat = "identity")
+# barplot 
 all_snor %>%
   ggplot(aes(x = genename,
              y = mean_count,
