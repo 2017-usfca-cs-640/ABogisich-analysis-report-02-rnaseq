@@ -74,8 +74,8 @@ stopifnot(exists("final_table"))
 
 
 ```{r make-summary-table-SNOR-top15-genes}
-# here I want to pull out just the top 15 genes that either 
-#  SNORA- or SNORD- in their base name 
+# here I want to pull out just the top 15 genes that either
+# SNORA- or SNORD- in their base name
 # have to filter it out as a subset from final_table
 snor_genes <- final_table %>%
   filter(grepl("SNOR", genename)) %>%
@@ -96,7 +96,7 @@ Out of a total of 297 SNOR-family genes identified in patient lung tissue sample
  
 ```{r make-all-SNOR-table, echo = FALSE}
 # There are many many genes in this dataset, so we can
-# subset it down to just a few here to look for 
+# subset it down to just a few here to look for
 # patterns in the most highly expressed
 all_snor <- final_table %>%
   filter(grepl("SNOR", genename)) %>%
@@ -126,7 +126,7 @@ When the SNOR-genes with the greatest mean count within the experimental group a
 
 ```{r barplot-of-SNOR-smoking-status, echo = FALSE}
 # this code uses the same data as above, but use it to make a
-# barplot 
+# barplot
 all_snor %>%
   ggplot(aes(x = genename,
              y = mean_count,
